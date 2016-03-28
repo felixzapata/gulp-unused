@@ -1,0 +1,28 @@
+{
+  "name": "gulp-unused",
+  "version": "0.0.1",
+  "description": "A Gulp task to check for unused files (jpg, png, css, js, etc) in a project files and output them to the console.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felixzapata/gulp-unused.git"
+  },
+  "keywords": [
+    "gulp",
+    "unused",
+    "images",
+    "css",
+    "js",
+    "png"
+  ],
+  "author": "Felix Zapata",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felixzapata/gulp-unused/issues"
+  },
+  "homepage": "https://github.com/felixzapata/gulp-unused#readme",
+  "dependencies": {
+    "moment": "^2.12.0",
+    "ramda": "^0.20.0"
+  }
+}
