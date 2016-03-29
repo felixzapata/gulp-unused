@@ -62,9 +62,6 @@ function getDateTime() {
 
 }
 
-todayDate = getDateTime();
-
-
 function deleteFile(fileRef) {
   fs.unlinkSync(fileRef);
   $.log('deleted ' + fileRef);
@@ -80,7 +77,7 @@ function unusedPlugin(customOptions, cb) {
   var unused;
   var content;
   var datemod;
-  var todayDate;
+  var todayDate = getDateTime();
   var startDate;
   var endDate;
   var dayDiff;
