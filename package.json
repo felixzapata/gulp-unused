@@ -30,7 +30,8 @@
     "glob-all": "^3.0.1",
     "gulp-util": "^3.0.7",
     "moment": "^2.12.0",
-    "ramda": "^0.20.0"
+    "ramda": "^0.20.0",
+    "through2": "^2.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
