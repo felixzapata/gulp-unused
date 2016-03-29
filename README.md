@@ -5,6 +5,10 @@ Inspired by [Grunt Unused](https://github.com/ryanburgess/grunt-unused).
 
 ## Work in progress
 
+## Options
+
+It uses the [same options as the Grunt task](https://github.com/ryanburgess/grunt-unused#options).
+
 ## License
 
 ISC © [Félix Zapata](http://github.com/felixzapata)
