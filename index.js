@@ -13,8 +13,8 @@ var fs = require('fs');
 var path = require('path');
 var moment = require('moment');
 var R = require('ramda');
-var $ = require('gulp-load-plugins');
-var glob = require('glob');
+var gutil = require('gulp-util');
+var glob = require('glob-all');
 
 function fileExists(filePath) {
   try {
@@ -64,11 +64,11 @@ function getDateTime() {
 
 function deleteFile(fileRef) {
   fs.unlinkSync(fileRef);
-  $.log('deleted ' + fileRef);
+  gutil.log('deleted ' + fileRef);
 }
 
 function logFiles(fileRef) {
-  $.log(fileRef);
+  gutil.log(fileRef);
 }
 
 function unusedPlugin(customOptions, cb) {
@@ -93,14 +93,15 @@ function unusedPlugin(customOptions, cb) {
   };
   
   var options = customOptions ? R.merge(defaultOptions, customOptions) : defaultOptions;
+
   // Get list of files depending on the file directory
   glob('**/*', { cwd: options.reference }, function (er, file) {
-    
     assets.push(file);
   });
   
   // Get list of files depending on the file directory
-  glob('**/*', { cwd: options.directory }, function (er, file) {
+  glob(options.directory, function (er, file) {
+    
     content = glob.sync(file);
     assets.forEach(function(asset){
       if(content.indexOf(asset) !== -1){
@@ -114,10 +115,10 @@ function unusedPlugin(customOptions, cb) {
   
   // output number of unused files
   if (unused.length) {
-    $.log($.colors.red(unused.length + ' unused file' + (unused.length === 1 ? '' : 's') + ':'));
+    gutil.log(gutil.colors.red(unused.length + ' unused file' + (unused.length === 1 ? '' : 's') + ':'));
   }
   else {
-    $.log($.colors.green('No unused files found.'));
+    gutil.log(gutil.colors.green('No unused files found.'));
   }
   
   unused.forEach(function(file){
@@ -151,13 +152,13 @@ function unusedPlugin(customOptions, cb) {
       if (err){
         throw err;
       } else {
-        $.log($.colors.green('Report "' + options.reportOutput + '" created.'));
+        gutil.log(gutil.colors.green('Report "' + options.reportOutput + '" created.'));
       } 
     });
   }
   
   if (unused.length && !options.remove && options.fail) {
-    $.log($.colors.red('Unused files were found.'));
+    gutil.log(gutil.colors.red('Unused files were found.'));
   }
   
 }
