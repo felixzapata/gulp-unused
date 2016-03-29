@@ -93,14 +93,14 @@ function unusedPlugin(customOptions, cb) {
   };
   
   var options = customOptions ? R.merge(defaultOptions, customOptions) : defaultOptions;
-  
   // Get list of files depending on the file directory
-  glob(['**/*'], { cwd: options.reference }, function (er, files) {
+  glob('**/*', { cwd: options.reference }, function (er, file) {
+    
     assets.push(file);
   });
   
   // Get list of files depending on the file directory
-  glob(['**/*'], { cwd: options.directory }, function (er, file) {
+  glob('**/*', { cwd: options.directory }, function (er, file) {
     content = glob.sync(file);
     assets.forEach(function(asset){
       if(content.indexOf(asset) !== -1){
