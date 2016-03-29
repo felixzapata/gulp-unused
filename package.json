@@ -13,7 +13,8 @@
     "images",
     "css",
     "js",
-    "png"
+    "png",
+    "gulpplugin"
   ],
   "scripts": {
     "test": "mocha",
@@ -27,12 +28,12 @@
   "homepage": "https://github.com/felixzapata/gulp-unused#readme",
   "dependencies": {
     "glob-all": "^3.0.1",
-    "gulp": "^3.9.1",
     "gulp-util": "^3.0.7",
     "moment": "^2.12.0",
     "ramda": "^0.20.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
     "gulp-jshint": "^2.0.0",
     "istanbul": "^0.4.2",
     "jshint": "^2.9.1",
