@@ -8,10 +8,9 @@
 
 'use strict';
 
-var gulp = require('gulp'),
-    jshint = require('gulp-jshint'),
-    unused = require('./index.js'),
-    nodeunit = require('gulp-nodeunit');
+var gulp = require('gulp');
+var jshint = require('gulp-jshint');
+var unused = require('./index.js');
 
 
 gulp.task('jshint', function() {
@@ -38,10 +37,3 @@ gulp.task('unused', function(cb) {
     return unused(options, cb);
 });
 
-gulp.task('nodeunit', ['unused'], function() {
-    return gulp.src('test/test.js').pipe(nodeunit()).on('end', function() {
-        process.nextTick(function() {
-            process.exit(0);
-        });
-    });
-});
