@@ -13,10 +13,10 @@ var fs = require('fs');
 var path = require('path');
 var moment = require('moment');
 var R = require('ramda');
+var through = require('through2');
 var gutil = require('gulp-util');
 var glob = require('glob-all');
 var PLUGIN_NAME = 'gulp-unused';
-
 
 function fileExists(filePath) {
   try {
@@ -86,96 +86,101 @@ function gulpUnused(customOptions, cb) {
   var assets = [];
   var links = [];
   var defaultOptions = {
-      reference: 'img/',
-      directory: ['**/*.html'],
-      remove: false,
-      days: null,
-      reportOutput: false,
-      fail: false
+    reference: 'img/',
+    directory: ['**/*.html'],
+    remove: false,
+    days: null,
+    reportOutput: false,
+    fail: false
   };
-  
+
   var options = customOptions ? R.merge(defaultOptions, customOptions) : defaultOptions;
   var content;
-  
+
   // Get list of files depending on the file directory
-  glob('**/*', { cwd: options.reference }, function (er, file) {
+  glob('**/*', { cwd: options.reference }, function(er, file) {
     assets.push(file);
   });
-  
-  return through.obj(function (file, enc, cb) {
 
-		if (file.isNull()) {
-			cb(null, file);
-			return;
-		}
-
-		if (file.isStream()) {
-			cb(new gutil.PluginError('gulp-unused', 'Streaming not supported'));
-			return;
-		}
-    
-    content = file.contents.toString();
-    assets.forEach(function(asset){
-      if(content.indexOf(asset) !== -1){
-        links.push(asset);
-      }
-    });
+  function bufferContents(file, enc, cb) {
   
-  
-    // Output unused files list in console
-    unused = R.difference(links, assets);
-    
-    // output number of unused files
-    if (unused.length) {
-      gutil.log(gutil.colors.red(unused.length + ' unused file' + (unused.length === 1 ? '' : 's') + ':'));
-    } else {
-      gutil.log(gutil.colors.green('No unused files found.'));
+    if (file.isNull()) {
+      cb(null, file);
+      return;
     }
-    
-    unused.forEach(function(file){
-      // delete file if remove is set to true
-      if(options.remove === true && options.days !== null){
-        datemod = fs.statSync(options.reference + file).mtime.toISOString();
-        datemod = datemod.replace(/\T.+/, '');
-        startDate = moment(datemod, 'YYYY-M-DD');
-        endDate = moment(todayDate, 'YYYY-M-DD');
-        dayDiff = endDate.diff(startDate, 'days');
 
-        if(dayDiff >= options.days){
+    if (file.isStream()) {
+
+      content = file.contents.toString();
+      assets.forEach(function(asset) {
+        if (content.indexOf(asset) !== -1) {
+          links.push(asset);
+        }
+      });
+      
+
+
+      // Output unused files list in console
+      unused = R.difference(links, assets);
+
+      // output number of unused files
+      if (unused.length) {
+        gutil.log(gutil.colors.red(unused.length + ' unused file' + (unused.length === 1 ? '' : 's') + ':'));
+      } else {
+        gutil.log(gutil.colors.green('No unused files found.'));
+      }
+
+      unused.forEach(function(file) {
+        // delete file if remove is set to true
+        if (options.remove === true && options.days !== null) {
+          datemod = fs.statSync(options.reference + file).mtime.toISOString();
+          datemod = datemod.replace(/\T.+/, '');
+          startDate = moment(datemod, 'YYYY-M-DD');
+          endDate = moment(todayDate, 'YYYY-M-DD');
+          dayDiff = endDate.diff(startDate, 'days');
+
+          if (dayDiff >= options.days) {
+            //delete file
+            deleteFile(options.reference + file);
+          } else {
+            // log file references
+            logFiles(options.reference + file);
+          }
+        } else if (options.remove === true) {
           //delete file
           deleteFile(options.reference + file);
-        }else{
+        } else {
           // log file references
           logFiles(options.reference + file);
         }
-      }else if(options.remove === true){
-        //delete file
-        deleteFile(options.reference + file);
-      }else{
-        // log file references
-        logFiles(options.reference + file);
-      }
-    });
+      });
     
+    }
+
+  }
+
+  function endStream(cb) {
     if (unused.length > 0 && options.reportOutput) {
       var destDir = path.dirname(options.reportOutput);
-      fs.writeFile(destDir, unused.join('\r\n'), function (err) {
-        if (err){
+      fs.writeFile(destDir, unused.join('\r\n'), function(err) {
+        if (err) {
           throw err;
         } else {
           gutil.log(gutil.colors.green('Report "' + options.reportOutput + '" created.'));
-        } 
+        }
       });
     }
-    
+
     if (unused.length && !options.remove && options.fail) {
       gutil.log(gutil.colors.red('Unused files were found.'));
     }
-    
-    cb(null, file);
 
-  });
-  
+    cb();
+
+  }
+
+  return through.obj(bufferContents, endStream);
+
 }
 
 // Exporting the plugin main function
