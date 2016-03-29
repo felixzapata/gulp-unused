@@ -1,0 +1,9 @@
+
+.cl:before, .cl:after { content:""; display:table; }
+.cl:after { clear:both; }
+
+body { text-align:center }
+.wrapper { width:82em; margin:0 auto; text-align:left; }
+#wrapperContent { padding-bottom:7.6em }
+#header { height:10em; padding-top:7.2em; }
+#footer { padding:2.6em 0; background:#393939 url("../img/bg_foot.png") repeat-x 0 0 }
