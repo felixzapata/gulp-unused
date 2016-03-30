@@ -123,7 +123,7 @@ function gulpUnused(customOptions, cb) {
     
 
     // Output unused files list in console
-    unused = R.difference(links, assets);
+    unused = R.difference(assets, links);
 
     // output number of unused files
     if (unused.length) {
