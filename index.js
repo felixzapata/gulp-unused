@@ -157,30 +157,26 @@ function gulpUnused(customOptions, cb) {
       }
     });
     
-   
-  }
-
-  function endStream(cb) {
     if (unused.length > 0 && options.reportOutput) {
-      var destDir = path.dirname(options.reportOutput);
+      var destDir = path.join(file.dirname, options.reportOutput);
       fs.writeFile(destDir, unused.join('\r\n'), function(err) {
         if (err) {
           throw err;
         } else {
           gutil.log(gutil.colors.green('Report "' + options.reportOutput + '" created.'));
+          cb();
         }
       });
     }
-
+    
     if (unused.length && !options.remove && options.fail) {
       gutil.log(gutil.colors.red('Unused files were found.'));
     }
-
-    cb();
-
+    
+   
   }
 
-  return through.obj(bufferContents, endStream);
+  return through.obj(bufferContents, cb);
 
 }
 
