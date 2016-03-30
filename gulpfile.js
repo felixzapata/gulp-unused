@@ -10,18 +10,19 @@
 
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
-var unused = require('./index.js');
+var stylish = require('jshint-stylish');
 
 
 gulp.task('jshint', function() {
     var options = {
-        jshintrc: '.jshintrc'
+        lookup: true
     };
     return gulp.src([
             'gulpfile.js',
             'index.js',
             '<%= nodeunit.tests %>'
         ])
-        .pipe(jshint(options));
+        .pipe(jshint(options))
+        .pipe(jshint.reporter(stylish));
 });
 

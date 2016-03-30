@@ -1,14 +1,13 @@
 {
+  "node": true,
+  "esnext": true,
+  "bitwise": true,
   "curly": true,
-  "eqeqeq": true,
   "immed": true,
-  "latedef": true,
   "newcap": true,
   "noarg": true,
-  "sub": true,
   "undef": true,
-  "boss": true,
-  "eqnull": true,
-  "node": true,
-  "es5": false
+  "unused": "vars",
+  "strict": true,
+  "mocha": true
 }
