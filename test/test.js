@@ -4,6 +4,7 @@ var pluginPath = '../index';
 var unused = require(pluginPath);
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var fs = require('fs');
 var path = require('path');
 var should = require('should');
 var assert = require('assert');
@@ -50,13 +51,22 @@ describe('gulp-unused', function() {
     };
     var expected = path.join(__dirname, './expected/result4/report.txt');
     var stream = unused(options);
+    var fixtureStream = fs.createReadStream(fixtures('index.html'));
+    var fixtureData = '';
     
-    stream.write(new gutil.File({
-      base: path.join(__dirname, './fixtures/'),
-      cwd: __dirname,
-		  path: fixtures('index.html')
-	  }));
-
+    fixtureStream.on('data', function(chunk){
+      fixtureData += chunk;
+    });
+    
+    fixtureStream.on('end', function(chunk){
+      stream.write(new gutil.File({
+        base: path.join(__dirname, './fixtures/'),
+        cwd: __dirname,
+		    path: fixtures('index.html'),
+        contents: new Buffer(fixtureData)
+	    }));
+    });
+    
     stream.on('finish', function () {
       assert.strictEqual(1, 1);
       cb();
