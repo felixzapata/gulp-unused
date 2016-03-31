@@ -78,6 +78,7 @@ describe('gulp-unused', function() {
       
       stream.on('finish', function () {
         assert.equal(fileExists(expected), true);
+        assert.equal(fs.readFileSync(expected).toString(), 'bg_foot.png');
         cb();
       });
     
