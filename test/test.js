@@ -38,16 +38,39 @@ describe('gulp-unused', function() {
     fs.remove(tmpFolder, done);
   });
   
-  xit('1) should find and remove images, CSS and JavaScript not used in the project', function(){
+  it('1) should find and remove images, CSS and JavaScript not used in the project', function(){
     var options = {
         reference: 'img/',
-        directory: ['**/*.html'],
-        days: 30,
-        remove: false, // set to true to delete unused files from project
-        reportOutput:'report.txt', // set to false to disable file output
-        fail: false // set to true to make the task fail when unused files are found
+        remove: true
     };
-    assert.equal(1, 2);
+    
+    var expected = path.join(__dirname, './.tmp/img/bg_foot.png');
+    var stream = unused(options);
+    var fixtureStream = fs.createReadStream(fixtures('index.html'));
+    var fixtureData = '';
+    
+    fixtureStream.on('data', function(chunk){
+      fixtureData += chunk;
+    });
+   
+    
+    fixtureStream.on('end', function(chunk){
+      
+      stream.on('finish', function () {
+        assert.equal(fileExists(expected), false);
+        cb();
+      });
+    
+      stream.write(new gutil.File({
+        base: path.join(__dirname, './.tmp/'),
+        cwd: __dirname,
+		    path: fixtures('index.html'),
+        contents: new Buffer(fixtureData)
+	    }));
+      
+      stream.end();
+      
+    });
   });
   
   xit('2) should find images, CSS and JavaScript not used in the project', function(){
