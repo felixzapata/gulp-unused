@@ -132,10 +132,10 @@ function gulpUnused(customOptions, cb) {
       gutil.log(gutil.colors.green('No unused files found.'));
     }
 
-    unused.forEach(function(file) {
+    unused.forEach(function(item) {
       // delete file if remove is set to true
       if (options.remove === true && options.days !== null) {
-        datemod = fs.statSync(options.reference + file).mtime.toISOString();
+        datemod = fs.statSync(options.reference + item).mtime.toISOString();
         datemod = datemod.replace(/\T.+/, '');
         startDate = moment(datemod, 'YYYY-M-DD');
         endDate = moment(todayDate, 'YYYY-M-DD');
@@ -143,17 +143,17 @@ function gulpUnused(customOptions, cb) {
 
         if (dayDiff >= options.days) {
           //delete file
-          deleteFile(options.reference + file);
+          deleteFile(path.join(file.dirname, options.reference, item));
         } else {
           // log file references
-          logFiles(options.reference + file);
+          logFiles(path.join(file.dirname, options.reference, item));
         }
       } else if (options.remove === true) {
         //delete file
-        deleteFile(options.reference + file);
+        deleteFile(path.join(file.dirname, options.reference, item));
       } else {
         // log file references
-        logFiles(options.reference + file);
+        logFiles(path.join(file.dirname, options.reference, item));
       }
     });
     
