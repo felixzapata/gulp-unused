@@ -27,7 +27,32 @@ gulp.task('unused', function() {
 
 ### Options
 
-It uses the [same options as the Grunt task](https://github.com/ryanburgess/grunt-unused#options).
+It uses, almost, the [same options as the Grunt task](https://github.com/ryanburgess/grunt-unused#options).
+
+#### reference
+Type: `String`
+Default value: `img/`
+
+A reference to the directory of files that are being checked if they are referenced in other project files.
+
+#### remove
+Type: `Boolean`
+Default value: `false`
+
+The ability to automatically delete unused file reference from project.
+
+#### days
+Type: `Number`
+Default value: `false`
+
+If remove is set to true and days has a value files will only delete if the file hasn't been modified after the length of days.
+
+#### reportOutput
+Type: `String`
+Default value: `false`
+
+Output unused files to a file. Set to false to disable
+
 
 ## License
 
