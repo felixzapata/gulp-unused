@@ -8,21 +8,6 @@
 
 'use strict';
 
-var gulp = require('gulp');
-var jshint = require('gulp-jshint');
-var stylish = require('jshint-stylish');
-
-
-gulp.task('jshint', function() {
-    var options = {
-        lookup: true
-    };
-    return gulp.src([
-            'gulpfile.js',
-            'index.js',
-            '<%= nodeunit.tests %>'
-        ])
-        .pipe(jshint(options))
-        .pipe(jshint.reporter(stylish));
+require('require-dir')('./tasks', {
+  recurse: true
 });
-
