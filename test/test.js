@@ -78,7 +78,40 @@ describe('gulp-unused', function() {
   });
   
   xit('3) should remove files after some days', function(){
-    assert.equal(1, 2);
+    var options = {
+        reference: 'img/',
+        days: 2
+    };
+    
+    var expected = path.join(__dirname, './.tmp/img/bg_old.png');
+    var expected2 = path.join(__dirname, './.tmp/img/bg_foot.png');
+
+    var stream = unused(options);
+    var fixtureStream = fs.createReadStream(fixtures('index.html'));
+    var fixtureData = '';
+   
+    fs.writeFileSync(expected, '');
+   
+    
+    fixtureStream.on('end', function(chunk){
+      
+      stream.on('finish', function () {
+        assert.equal(fileExists(expected), false);
+        assert.equal(fileExists(expected2), true);
+        cb();
+      });
+    
+      stream.write(new gutil.File({
+        base: path.join(__dirname, './.tmp/'),
+        cwd: __dirname,
+		    path: fixtures('index.html'),
+        contents: new Buffer(fixtureData)
+	    }));
+      
+      stream.end();
+      
+    });
+    
   });
   
   it('4) create output report', function(cb){
