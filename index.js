@@ -106,7 +106,7 @@ function gulpUnused(customOptions, cb) {
     }
 
     if (file.isStream()) {
-      this.emit('error', new PluginError('gulp-concat',  'Streaming not supported'));
+      this.emit('error', new PluginError('gulp-unused',  'Streaming not supported'));
       cb();
       return;
     }
