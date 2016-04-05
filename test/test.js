@@ -11,7 +11,7 @@ var assert = require('assert');
 var sassert = require('stream-assert');
 require('mocha');
 
-var fixtures = function (glob) { return path.join(__dirname, './.tmp', glob); }
+var fixtures = function(glob) { return path.join(__dirname, './.tmp', glob); }
 
 
 function fileExists(filePath) {
@@ -21,87 +21,87 @@ function fileExists(filePath) {
     return false;
   }
 }
-    
+
 describe('gulp-unused', function() {
-  
+
   var tmpFolder = path.join(__dirname, '.tmp');
-  
-  beforeEach(function(done){
+
+  beforeEach(function(done) {
     var folder = path.join(__dirname, './fixtures/');
-    fs.copy(folder, tmpFolder, function(err){
+    fs.copy(folder, tmpFolder, function(err) {
       done();
     });
   });
 
   // We'll delete it when we're done.
-  afterEach(function(done){
+  afterEach(function(done) {
     fs.remove(tmpFolder, done);
   });
-  
-  it('1) should find and remove images, CSS and JavaScript not used in the project', function(done){
+
+  it('1) should find and remove images, CSS and JavaScript not used in the project', function(done) {
     var options = {
-        reference: 'img/',
-        remove: true
+      reference: 'img/',
+      remove: true
     };
-    
+
     var expected = path.join(__dirname, './.tmp/img/bg_foot.png');
-    
+
     gulp.src(fixtures('index.html'))
-        .pipe(unused(options))
-        .pipe(sassert.length(1))
-        .pipe(sassert.first(function () { 
-          fileExists(expected).should.equal(false);
-         }))
-        .pipe(sassert.end(done));
-    
+      .pipe(unused(options))
+      .pipe(sassert.length(1))
+      .pipe(sassert.first(function() {
+        fileExists(expected).should.equal(false);
+      }))
+      .pipe(sassert.end(done));
+
   });
-  
-  xit('2) should find images, CSS and JavaScript not used in the project', function(){
+
+  xit('2) should find images, CSS and JavaScript not used in the project', function() {
     assert.equal(1, 2);
   });
-  
-  it('3) should remove files after some days', function(done){
+
+  it('3) should remove files after some days', function(done) {
     var options = {
-        reference: 'img/',
-        remove: true,
-        days: 2
+      reference: 'img/',
+      remove: true,
+      days: 2
     };
-    
+
     var expected = path.join(__dirname, './.tmp/img/foobar.txt');
     var expected2 = path.join(__dirname, './.tmp/img/bg_foot.png');
     var dateTemp = new Date();
     var dateToTest = dateTemp.setDate(dateTemp.getDate() - options.days);
-   
+
     fs.writeFileSync(expected, 'foobar test');
     fs.utimesSync(expected, dateToTest, dateToTest);
-    
-    
+
+
     gulp.src(fixtures('index.html'))
-        .pipe(unused(options))
-        .pipe(sassert.first(function (d) { 
-          fileExists(expected).should.equal(false);
-          fileExists(expected2).should.equal(true);
-         }))
-        .pipe(sassert.end(done));
-   
-    
+      .pipe(unused(options))
+      .pipe(sassert.first(function(d) {
+        fileExists(expected).should.equal(false);
+        fileExists(expected2).should.equal(true);
+      }))
+      .pipe(sassert.end(done));
+
+
   });
-  
-  it('4) create output report', function(done){
-    
+
+  it('4) create output report', function(done) {
+
     var options = {
-        reference: 'img/',
-        reportOutput: 'report.txt'
+      reference: 'img/',
+      reportOutput: 'report.txt'
     };
     var expected = path.join(__dirname, './.tmp/report.txt');
-    
+
     gulp.src(fixtures('index.html'))
-        .pipe(unused(options))
-        .pipe(sassert.first(function (d) { 
-          fs.readFileSync(expected).toString().should.equal('bg_foot.png');
-          fileExists(expected).should.equal(true);
-         }))
-        .pipe(sassert.end(done));
+      .pipe(unused(options))
+      .pipe(sassert.first(function(d) {
+        fs.readFileSync(expected).toString().should.equal('bg_foot.png');
+        fileExists(expected).should.equal(true);
+      }))
+      .pipe(sassert.end(done));
   });
 
 });
