@@ -162,14 +162,10 @@ function gulpUnused(customOptions, cb) {
     
     if (unused.length > 0 && options.reportOutput) {
       var destDir = path.join(dirname, options.reportOutput);
-      fs.writeFile(destDir, unused.join('\r\n'), function(err) {
-        if (err) {
-          throw err;
-        } else {
-          gutil.log(gutil.colors.green('Report "' + options.reportOutput + '" created.'));
-        }
-      });
+      fs.writeFileSync(destDir, unused.join('\r\n'));
+      gutil.log(gutil.colors.green('Report "' + options.reportOutput + '" created.'));  
     }
+    
     
     if (unused.length && !options.remove && options.fail) {
       gutil.log(gutil.colors.red('Unused files were found.'));
