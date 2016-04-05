@@ -18,14 +18,6 @@ var gutil = require('gulp-util');
 var glob = require('glob-all');
 var PLUGIN_NAME = 'gulp-unused';
 
-function fileExists(filePath) {
-  try {
-    return fs.statSync(filePath).isFile();
-  } catch (err) {
-    return false;
-  }
-}
-
 //get current date and time
 function getDateTime() {
 
@@ -74,7 +66,6 @@ function logFiles(fileRef) {
 }
 
 function gulpUnused(customOptions, cb) {
-  var reference;
   var dirname;
   var unused;
   var content;
@@ -96,7 +87,6 @@ function gulpUnused(customOptions, cb) {
   
   
   var options = customOptions ? R.merge(defaultOptions, customOptions) : defaultOptions;
-  var content;
 
   function bufferContents(file, enc, cb) {
   
@@ -106,7 +96,7 @@ function gulpUnused(customOptions, cb) {
     }
     
     if (file.isStream()) {
-      this.emit('error', new PluginError('gulp-unused',  'Streaming not supported'));
+      this.emit('error', new PluginError(PLUGIN_NAME,  'Streaming not supported'));
       cb();
       return;
     }
