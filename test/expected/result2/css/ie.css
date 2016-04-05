@@ -1,5 +1,0 @@
-.cl { zoom:1; }
-/* Reset border input in IE */
-input[type=submit], input[type=reset], input[type=button]{filter:chroma(color=#000000);}
-
-.ie7 .btn a, .btn input { display:inline; }
