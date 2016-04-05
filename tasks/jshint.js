@@ -16,6 +16,6 @@ gulp.task('jshint', function() {
             'index.js',
             '<%= nodeunit.tests %>'
         ])
-        .pipe(jshint(options))
-        .pipe(jshint.reporter(stylish));
+        .pipe($.jshint(options))
+        .pipe($.jshint.reporter(stylish));
 });
