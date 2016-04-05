@@ -60,40 +60,30 @@ describe('gulp-unused', function() {
     assert.equal(1, 2);
   });
   
-  xit('3) should remove files after some days', function(){
+  it('3) should remove files after some days', function(done){
     var options = {
         reference: 'img/',
+        remove: true,
         days: 2
     };
     
-    var expected = path.join(__dirname, './.tmp/img/bg_old.png');
+    var expected = path.join(__dirname, './.tmp/img/foobar.txt');
     var expected2 = path.join(__dirname, './.tmp/img/bg_foot.png');
-
-    var stream = unused(options);
-    var fixtureStream = fs.createReadStream(fixtures('index.html'));
-    var fixtureData = '';
+    var dateTemp = new Date();
+    var dateToTest = dateTemp.setDate(dateTemp.getDate() - options.days);
    
-    fs.writeFileSync(expected, '');
+    fs.writeFileSync(expected, 'foobar test');
+    fs.utimesSync(expected, dateToTest, dateToTest);
+    
+    
+    gulp.src(fixtures('index.html'))
+        .pipe(unused(options))
+        .pipe(sassert.first(function (d) { 
+          fileExists(expected).should.equal(false);
+          fileExists(expected2).should.equal(true);
+         }))
+        .pipe(sassert.end(done));
    
-    
-    fixtureStream.on('end', function(chunk){
-      
-      stream.on('finish', function () {
-        assert.equal(fileExists(expected), false);
-        assert.equal(fileExists(expected2), true);
-        cb();
-      });
-    
-      stream.write(new gutil.File({
-        base: path.join(__dirname, './.tmp/'),
-        cwd: __dirname,
-		    path: fixtures('index.html'),
-        contents: new Buffer(fixtureData)
-	    }));
-      
-      stream.end();
-      
-    });
     
   });
   
