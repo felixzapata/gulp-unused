@@ -9,5 +9,8 @@
   "undef": true,
   "unused": "vars",
   "strict": true,
-  "mocha": true
+  "mocha": true,
+  "globals": {
+    "PluginError": true
+  }
 }
