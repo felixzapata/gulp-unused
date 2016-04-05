@@ -17,8 +17,7 @@
     "gulpplugin"
   ],
   "scripts": {
-    "test": "mocha",
-    "coverage": "istanbul cover _mocha"
+    "test": "gulp mocha"
   },
   "author": "Felix Zapata",
   "license": "ISC",
@@ -41,6 +40,7 @@
     "gulp-git": "^1.7.0",
     "gulp-jshint": "^2.0.0",
     "gulp-load-plugins": "^1.2.0",
+    "gulp-mocha": "^2.2.0",
     "istanbul": "^0.4.2",
     "jshint": "^2.9.1",
     "jshint-stylish": "^2.1.0",
