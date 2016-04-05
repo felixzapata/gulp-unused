@@ -56,8 +56,20 @@ describe('gulp-unused', function() {
 
   });
 
-  xit('2) should find images, CSS and JavaScript not used in the project', function() {
-    assert.equal(1, 2);
+  it('2) should find images, CSS and JavaScript not used in the project', function(done) {
+    var options = {
+      reference: 'img/'
+    };
+
+    var expected = path.join(__dirname, './.tmp/img/bg_foot.png');
+
+    gulp.src(fixtures('index.html'))
+      .pipe(unused(options))
+      .pipe(sassert.length(1))
+      .pipe(sassert.first(function() {
+        fileExists(expected).should.equal(true);
+      }))
+      .pipe(sassert.end(done));
   });
 
   it('3) should remove files after some days', function(done) {
