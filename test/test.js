@@ -38,39 +38,22 @@ describe('gulp-unused', function() {
     fs.remove(tmpFolder, done);
   });
   
-  it('1) should find and remove images, CSS and JavaScript not used in the project', function(){
+  it('1) should find and remove images, CSS and JavaScript not used in the project', function(done){
     var options = {
         reference: 'img/',
         remove: true
     };
     
     var expected = path.join(__dirname, './.tmp/img/bg_foot.png');
-    var stream = unused(options);
-    var fixtureStream = fs.createReadStream(fixtures('index.html'));
-    var fixtureData = '';
     
-    fixtureStream.on('data', function(chunk){
-      fixtureData += chunk;
-    });
-   
+    gulp.src(fixtures('index.html'))
+        .pipe(unused(options))
+        .pipe(sassert.length(1))
+        .pipe(sassert.first(function () { 
+          fileExists(expected).should.equal(false);
+         }))
+        .pipe(sassert.end(done));
     
-    fixtureStream.on('end', function(chunk){
-      
-      stream.on('finish', function () {
-        assert.equal(fileExists(expected), false);
-        cb();
-      });
-    
-      stream.write(new gutil.File({
-        base: path.join(__dirname, './.tmp/'),
-        cwd: __dirname,
-		    path: fixtures('index.html'),
-        contents: new Buffer(fixtureData)
-	    }));
-      
-      stream.end();
-      
-    });
   });
   
   xit('2) should find images, CSS and JavaScript not used in the project', function(){
@@ -114,7 +97,7 @@ describe('gulp-unused', function() {
     
   });
   
-  it('4) create output report', function(cb){
+  xit('4) create output report', function(done){
     
     var options = {
         reference: 'img/',
@@ -125,32 +108,14 @@ describe('gulp-unused', function() {
     var fixtureStream = fs.createReadStream(fixtures('index.html'));
     var fixtureData = '';
     
-    fixtureStream.on('data', function(chunk){
-      fixtureData += chunk;
-    });
-   
-    
-    fixtureStream.on('end', function(chunk){
-      
-      stream.on('finish', function () {
-        assert.equal(fileExists(expected), true);
-        assert.equal(fs.readFileSync(expected).toString(), 'bg_foot.png');
-        cb();
-      });
-    
-      stream.write(new gutil.File({
-        base: path.join(__dirname, './.tmp/'),
-        cwd: __dirname,
-		    path: fixtures('index.html'),
-        contents: new Buffer(fixtureData)
-	    }));
-      
-      stream.end();
-      
-    });
-   
-    
- 
+    gulp.src(fixtures('index.html'))
+        .pipe(unused(options))
+        .pipe(sassert.length(1))
+        .pipe(sassert.first(function () { 
+          fileExists(expected).should.equal(true);
+          fs.readFileSync(expected).toString().should.equal('bg_foot.png');
+         }))
+        .pipe(sassert.end(done));
   });
 
 });
