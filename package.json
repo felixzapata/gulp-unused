@@ -17,7 +17,7 @@
     "gulpplugin"
   ],
   "scripts": {
-    "test": "gulp mocha"
+    "test": "gulp test"
   },
   "author": "Felix Zapata",
   "license": "ISC",
