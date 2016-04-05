@@ -66,11 +66,11 @@ function getDateTime() {
 
 function deleteFile(fileRef) {
   fs.unlinkSync(fileRef);
-  gutil.log('deleted ' + fileRef);
+  gutil.log('deleted: ' + fileRef);
 }
 
 function logFiles(fileRef) {
-  gutil.log(fileRef);
+  gutil.log('file: ' + fileRef);
 }
 
 function gulpUnused(customOptions, cb) {
@@ -134,11 +134,11 @@ function gulpUnused(customOptions, cb) {
       gutil.log(gutil.colors.green('No unused files found.'));
     }
     
-
     unused.forEach(function(item) {
       // delete file if remove is set to true
       if (options.remove === true && options.days !== null) {
-        datemod = fs.statSync(options.reference + item).mtime.toISOString();
+        
+        datemod = fs.statSync(path.join(dirname, options.reference, item)).mtime.toISOString();
         datemod = datemod.replace(/\T.+/, '');
         startDate = moment(datemod, 'YYYY-M-DD');
         endDate = moment(todayDate, 'YYYY-M-DD');
