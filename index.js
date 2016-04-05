@@ -75,7 +75,7 @@ function logFiles(fileRef) {
 
 function gulpUnused(customOptions, cb) {
   var reference;
-  var directory;
+  var dirname;
   var unused;
   var content;
   var datemod;
@@ -93,10 +93,10 @@ function gulpUnused(customOptions, cb) {
     reportOutput: false,
     fail: false
   };
-
+  
+  
   var options = customOptions ? R.merge(defaultOptions, customOptions) : defaultOptions;
   var content;
-  
 
   function bufferContents(file, enc, cb) {
   
@@ -104,15 +104,17 @@ function gulpUnused(customOptions, cb) {
       cb(null, file);
       return;
     }
-
+    
     if (file.isStream()) {
       this.emit('error', new PluginError('gulp-unused',  'Streaming not supported'));
       cb();
       return;
     }
     
+    dirname = path.dirname(file.path);
+    
     // Get list of files depending on the file directory
-    assets = glob.sync('**/*.*', { cwd: path.join(file.dirname, options.reference) });
+    assets = glob.sync('**/*.*', { cwd: path.join(dirname, options.reference) });
       
     content = file.contents.toString();
     assets.forEach(function(asset) {
@@ -131,6 +133,7 @@ function gulpUnused(customOptions, cb) {
     } else {
       gutil.log(gutil.colors.green('No unused files found.'));
     }
+    
 
     unused.forEach(function(item) {
       // delete file if remove is set to true
@@ -143,28 +146,27 @@ function gulpUnused(customOptions, cb) {
 
         if (dayDiff >= options.days) {
           //delete file
-          deleteFile(path.join(file.dirname, options.reference, item));
+          deleteFile(path.join(dirname, options.reference, item));
         } else {
           // log file references
-          logFiles(path.join(file.dirname, options.reference, item));
+          logFiles(path.join(dirname, options.reference, item));
         }
       } else if (options.remove === true) {
         //delete file
-        deleteFile(path.join(file.dirname, options.reference, item));
+        deleteFile(path.join(dirname, options.reference, item));
       } else {
         // log file references
-        logFiles(path.join(file.dirname, options.reference, item));
+        logFiles(path.join(dirname, options.reference, item));
       }
     });
     
     if (unused.length > 0 && options.reportOutput) {
-      var destDir = path.join(file.dirname, options.reportOutput);
+      var destDir = path.join(dirname, options.reportOutput);
       fs.writeFile(destDir, unused.join('\r\n'), function(err) {
         if (err) {
           throw err;
         } else {
           gutil.log(gutil.colors.green('Report "' + options.reportOutput + '" created.'));
-          cb();
         }
       });
     }
@@ -172,6 +174,10 @@ function gulpUnused(customOptions, cb) {
     if (unused.length && !options.remove && options.fail) {
       gutil.log(gutil.colors.red('Unused files were found.'));
     }
+    
+    this.push(file);
+    
+    cb();
     
    
   }
