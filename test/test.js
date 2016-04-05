@@ -97,23 +97,19 @@ describe('gulp-unused', function() {
     
   });
   
-  xit('4) create output report', function(done){
+  it('4) create output report', function(done){
     
     var options = {
         reference: 'img/',
         reportOutput: 'report.txt'
     };
     var expected = path.join(__dirname, './.tmp/report.txt');
-    var stream = unused(options);
-    var fixtureStream = fs.createReadStream(fixtures('index.html'));
-    var fixtureData = '';
     
     gulp.src(fixtures('index.html'))
         .pipe(unused(options))
-        .pipe(sassert.length(1))
-        .pipe(sassert.first(function () { 
-          fileExists(expected).should.equal(true);
+        .pipe(sassert.first(function (d) { 
           fs.readFileSync(expected).toString().should.equal('bg_foot.png');
+          fileExists(expected).should.equal(true);
          }))
         .pipe(sassert.end(done));
   });
