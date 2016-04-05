@@ -1,8 +1,8 @@
 'use strict';
-var gulp = require('gulp'),
-  $ = require('gulp-load-plugins')(),
-  stylish = require('jshint-stylish'),
-  options = {
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var stylish = require('jshint-stylish');
+var options = {
     lookup: true
   };
 

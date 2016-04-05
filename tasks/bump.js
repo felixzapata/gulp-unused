@@ -1,7 +1,7 @@
 'use strict';
-var gulp = require('gulp'),
-  $ = require('gulp-load-plugins')(),
-  path = require('path');
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var path = require('path');
 
 
 function doBump(type) {

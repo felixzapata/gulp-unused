@@ -1,8 +1,7 @@
 'use strict';
-
-var gulp = require('gulp'),
-  $ = require('gulp-load-plugins')(),
-  runSequence = require('run-sequence');
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var runSequence = require('run-sequence');
 
 function done(error) {
   if (error) {

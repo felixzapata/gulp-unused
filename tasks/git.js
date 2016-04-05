@@ -1,9 +1,9 @@
 'use strict';
-var gulp = require('gulp'),
-  $ = require('gulp-load-plugins')(),
-  path = require('path'),
-  runSequence = require('run-sequence'),
-  fs = require('fs');
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var path = require('path');
+var runSequence = require('run-sequence');
+var fs = require('fs');
 
 function getPackageJSONVersion() {
   return JSON.parse(fs.readFileSync('./package.json', 'utf8')).version;
